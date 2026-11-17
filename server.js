@@ -9,7 +9,7 @@ const db = new DatabaseSync(path.join(root, 'seato.db'));
 db.exec('PRAGMA foreign_keys=ON');
 db.exec(fs.readFileSync(path.join(root, 'schema.sql'), 'utf8'));
 const seed = JSON.parse(fs.readFileSync(path.join(root, 'seed.json'), 'utf8'));
-const addRestaurant = db.prepare('INSERT OR IGNORE INTO restaurants(restaurant_id,name,city,cuisine) VALUES(?,?,?,?)');
+const addRestaurant = db.prepare('INSERT INTO restaurants(restaurant_id,name,city,cuisine) VALUES(?,?,?,?) ON CONFLICT(restaurant_id) DO UPDATE SET name=excluded.name,city=excluded.city,cuisine=excluded.cuisine');
 const addTable = db.prepare('INSERT OR IGNORE INTO restaurant_tables(table_id,restaurant_id,table_number,capacity) VALUES(?,?,?,?)');
 db.exec('BEGIN');
 try {
